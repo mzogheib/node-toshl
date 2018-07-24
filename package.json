@@ -1,0 +1,26 @@
+{
+  "name": "node-toshl",
+  "version": "0.1.0",
+  "description": "A Node.js wrapper for the Toshl API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mzogheib/node-toshl.git"
+  },
+  "keywords": [
+    "toshl",
+    "node"
+  ],
+  "author": "mzogheib",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mzogheib/node-toshl/issues"
+  },
+  "homepage": "https://github.com/mzogheib/node-toshl",
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "baseApiUrl": "https://api.toshl.com",
+  "baseOauthUrl": "https://toshl.com/oauth2"
+}

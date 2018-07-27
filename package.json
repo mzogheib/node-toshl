@@ -15,7 +15,7 @@
     "node"
   ],
   "author": "mzogheib",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mzogheib/node-toshl/issues"
   },

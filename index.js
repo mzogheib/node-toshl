@@ -1,89 +1,16 @@
-const axios = require('axios');
-const auth = require('./private/toshl-auth');
-const querystring = require('querystring');
+const oauth = require('./api/oauth');
+const entries = require('./api/entries');
+const tags = require('./api/tags');
 
-module.exports = {
-  oauth: {
-    url: oauthUrl,
-    token,
-    deauthorize,
-    refresh: refreshAuth
-  },
-  entries: {
-    list: listEntries
-  },
-  tags: {
-    list: listTags
+module.exports = class NodeToshl {
+  constructor({ client_id, client_secret, redirect_uri }) {
+    this.oauth = {
+      url: () => oauth.url({ client_id, redirect_uri }),
+      token: ({ code }) => oauth.token({ code, client_id, client_secret, redirect_uri }),
+      deauthorize: ({ refresh_token, access_token }) => oauth.deauthorize({ refresh_token, access_token }),
+      refresh: ({ refresh_token }) => oauth.refresh({ refresh_token, client_id, client_secret })
+    }
+    this.entries = entries;
+    this.tags = tags;
   }
-};
-
-const baseApiUrl = 'https://api.toshl.com';
-const baseOauthUrl = 'https://toshl.com/oauth2';
-
-const get = ({ baseURL = baseApiUrl, url, headers, params }) => new Promise((resolve, reject) => {
-  const config = {
-    method: 'GET',
-    baseURL,
-    url,
-    headers,
-    params
-  };
-  axios.request(config)
-    .then(response => resolve(response.data))
-    .catch(error => reject({ status: error.response.status, message: error.response.data.description }));
-});
-
-const post = ({ baseURL = baseOauthUrl, url, auth, headers, data }) => new Promise((resolve, reject) => {
-  const config = {
-    method: 'POST',
-    baseURL,
-    url,
-    auth,
-    headers: { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' },
-    data: querystring.stringify(data)
-  };
-  axios.request(config)
-    .then(response => resolve(response.data))
-    .catch(error => reject({ status: error.response.status, message: error.response.data }));
-});
-
-function oauthUrl () {
-  const params = {
-    client_id: auth.client_id,
-    response_type: 'code',
-    redirect_uri: auth.redirect_uri
-  };
-  return `${baseOauthUrl}/authorize?${querystring.stringify(params)}`;
-}
-
-function token(code) {
-  const data = {
-    code: code,
-    grant_type: 'authorization_code',
-    redirect_uri: auth.redirect_uri
-  };
-  return post({ url: '/token', auth: { username: auth.client_id, password: auth.client_secret }, data });
-}
-
-function deauthorize(auth) {
-  const data = {
-    refresh_token: auth.refresh_token
-  };
-  return post({ url: '/revoke', headers: { Authorization: `Bearer ${auth.access_token}` }, data });
-}
-
-function refreshAuth(expiredAuth) {
-  const data = {
-    grant_type: 'refresh_token',
-    refresh_token: expiredAuth.refresh_token
-  };
-  return post({ url: '/token', auth: { username: auth.client_id, password: auth.client_secret }, data });
-}
-
-function listEntries(from, to, token) {
-  return get({ url: '/entries', headers: { Authorization: `Bearer ${token}` }, params: { from, to } });
-}
-
-function listTags(token) {
-  return get({ url: '/tags', headers: { Authorization: `Bearer ${token}` }});
 }

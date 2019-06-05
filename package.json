@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/mzogheib/node-toshl",
   "dependencies": {
-    "axios": "^0.18.0"
+    "axios": "^0.18.1"
   }
 }
